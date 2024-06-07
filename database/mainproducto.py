@@ -4,7 +4,7 @@ from producto import Producto
 cc = ColeccionProductos()
 
 # cc.actualizar()
-cc.borrar(Producto('Destornillador'))
+cc.borrar(Producto('amaro'))
 
 
 

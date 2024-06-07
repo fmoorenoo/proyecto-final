@@ -26,7 +26,7 @@ SQLDDLSELECT = '''
 '''
 
 SQLDDLINSERT = '''INSERT INTO producto (nombre_producto) VALUES '''
-                #Hay que concatenar
+                # Hay que concatenar
 
 SQLDDLUPDATEPART1 = '''UPDATE producto SET nombre_producto = "'''
 SQLDDLUPDATEPART2 = '''" WHERE id = '''
@@ -34,7 +34,7 @@ SQLDDLUPDATEPART2 = '''" WHERE id = '''
 SQLDDLDELETE = '''DELETE FROM producto WHERE id = '''
 
 SQLDDLSELECT1 = '''SELECT id FROM producto WHERE nombre_producto LIKE '''
-                #Hay que concatenar
+                # Hay que concatenar
 
 
 class ColeccionProductos:
@@ -47,27 +47,30 @@ class ColeccionProductos:
         self.con.execute(SQLMDLCREATE_tienda)
         self.con.execute(SQLMDLCREATE_trabajador)
 
-    def leer(self)->str:
+    def leer(self):
         return self.con.execute(SQLDDLSELECT).fetchall()
     
-    def insertar(self, nombre_producto) -> None:
+    def insertar(self, nombre_producto):
         if self.buscar(nombre_producto) == 0:
             elstr = "('" + str(nombre_producto) + "')"
             self.con.execute(SQLDDLINSERT + elstr)
+            self.con.commit()
 
-    def actualizar(self, producto:str, nuevoProducto:str):
+    def actualizar(self, producto, nuevoProducto):
         id = self.buscar(producto)
         if id != 0:
             elstr = SQLDDLUPDATEPART1 + nuevoProducto 
             elstr += SQLDDLUPDATEPART2 + str(id)
             self.con.execute(elstr)
+            self.con.commit()
 
     def borrar(self, nombre_producto):
         id = self.buscar(nombre_producto) 
         if id != 0:
             self.con.execute(SQLDDLDELETE + str(id))
+            self.con.commit()
 
-    def buscar(self, nombre_producto:Producto) -> int:
+    def buscar(self, nombre_producto):
         resultado = 0
         elstr = '"' + str(nombre_producto) + '"'
         res = self.con.execute(SQLDDLSELECT1 + elstr)
