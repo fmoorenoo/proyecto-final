@@ -78,3 +78,4 @@ class ColeccionProductos:
         if reg != None:
             resultado = reg[0]
         return resultado
+        
