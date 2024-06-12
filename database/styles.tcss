@@ -1,0 +1,9 @@
+Screen {
+    
+    background: rgb(128, 128, 128);
+    
+}
+    
+#boton_anadir, #boton_eliminar, #boton_aceptar, #boton_cancelar {
+    margin: 3;
+}

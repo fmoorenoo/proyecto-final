@@ -80,7 +80,7 @@ class DeleteScreen(Screen):
 
 
 class ModesApp(App):
-    CSS_PATH = "align.tcss"
+    CSS_PATH = "styles.tcss"
     
     def __init__(self):
         super().__init__()
