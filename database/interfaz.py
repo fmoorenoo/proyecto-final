@@ -79,7 +79,7 @@ class DeleteScreen(Screen):
 
 
 
-class ModesApp(App):
+class Pantallas(App):
     CSS_PATH = "styles.tcss"
     
     def __init__(self):
@@ -100,5 +100,5 @@ class ModesApp(App):
 
 
 if __name__ == "__main__":
-    app = ModesApp()
+    app = Pantallas()
     app.run()
