@@ -1,9 +1,23 @@
 Screen {
-    
     background: rgb(128, 128, 128);
-    
 }
     
 #boton_anadir, #boton_eliminar, #boton_aceptar, #boton_cancelar {
-    margin: 3;
+    width: 20;
+    margin: 1;
+}
+Label {
+    padding: 1;
+    text-style: bold;
+}
+DataTable{
+    width: 40;
+    background: blue 20%;
+    border: tall blue;
+    align: center top;
+}
+
+Footer {
+    height: 2;
+    align: center top;
 }
