@@ -1,5 +1,4 @@
 from db import Db
-from producto import Producto
 
 SQLMDLCREATE_producto = '''
     CREATE TABLE IF NOT EXISTS producto (
@@ -21,20 +20,25 @@ SQLMDLCREATE_trabajador = '''
 '''
 
 
-SQLDDLSELECT = '''
-    SELECT * FROM producto
-'''
+ver_productos = '''SELECT * FROM producto'''
+ver_trabajadores = '''SELECT * FROM trabajador'''
 
-SQLDDLINSERT = '''INSERT INTO producto (nombre_producto) VALUES '''
-                # Hay que concatenar
+
+insertar_producto = '''INSERT INTO producto (nombre_producto) VALUES '''
+insertar_trabajador = '''INSERT INTO trabajador (nombre_trabajador) VALUES '''            
+
 
 SQLDDLUPDATEPART1 = '''UPDATE producto SET nombre_producto = "'''
 SQLDDLUPDATEPART2 = '''" WHERE id = '''
 
-SQLDDLDELETE = '''DELETE FROM producto WHERE id = '''
 
-SQLDDLSELECT1 = '''SELECT id FROM producto WHERE nombre_producto LIKE '''
-                # Hay que concatenar
+borrar_producto = '''DELETE FROM producto WHERE id = '''
+borrar_trabajador = '''DELETE FROM trabajador WHERE id = '''
+
+
+buscar_producto = '''SELECT id FROM producto WHERE nombre_producto LIKE '''
+buscar_trabajador = '''SELECT id FROM trabajador WHERE nombre_trabajador LIKE '''
+
 
 
 class ColeccionProductos:
@@ -47,13 +51,20 @@ class ColeccionProductos:
         self.con.execute(SQLMDLCREATE_tienda)
         self.con.execute(SQLMDLCREATE_trabajador)
 
-    def leer(self):
-        return self.con.execute(SQLDDLSELECT).fetchall()
+    def leer(self, tipo):
+        if tipo == "pro":
+            return self.con.execute(ver_productos).fetchall()
+        elif tipo == "tra":
+            return self.con.execute(ver_trabajadores).fetchall()
+        
     
-    def insertar(self, nombre_producto):
-        if self.buscar(nombre_producto) == 0:
-            elstr = "('" + str(nombre_producto) + "')"
-            self.con.execute(SQLDDLINSERT + elstr)
+    def insertar(self, nombre, tipo):
+        if self.buscar(nombre, tipo) == 0:
+            elstr = "('" + str(nombre) + "')"
+            if tipo == "pro":
+                self.con.execute(insertar_producto + elstr)
+            elif tipo == "tra":
+                self.con.execute(insertar_trabajador + elstr)
             self.con.commit()
 
     def actualizar(self, producto, nuevoProducto):
@@ -64,18 +75,23 @@ class ColeccionProductos:
             self.con.execute(elstr)
             self.con.commit()
 
-    def borrar(self, nombre_producto):
-        id = self.buscar(nombre_producto) 
+    def borrar(self, nombre, tipo):
+        id = self.buscar(nombre, tipo) 
         if id != 0:
-            self.con.execute(SQLDDLDELETE + str(id))
+            if tipo == "pro":
+                self.con.execute(borrar_producto + str(id))
+            elif tipo == "tra":
+                self.con.execute(borrar_trabajador + str(id))
             self.con.commit()
 
-    def buscar(self, nombre_producto):
+    def buscar(self, nombre, tipo):
         resultado = 0
-        elstr = '"' + str(nombre_producto) + '"'
-        res = self.con.execute(SQLDDLSELECT1 + elstr)
+        elstr = '"' + str(nombre) + '"'
+        if tipo == "pro":
+            res = self.con.execute(buscar_producto + elstr)
+        elif tipo == "tra":
+            res = self.con.execute(buscar_trabajador + elstr)
         reg = res.fetchone()
         if reg != None:
             resultado = reg[0]
-        return resultado
-        
+        return resultado 
