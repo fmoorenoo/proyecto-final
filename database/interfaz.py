@@ -1,95 +1,126 @@
 from textual.app import App, ComposeResult
 from textual.screen import Screen
-from textual.widgets import Footer, Placeholder, Button, DataTable, Input
-from textual.containers import Horizontal
-from textual.binding import Binding
-from coleccionproductos import ColeccionProductos
-from pantallas import MainScreen, TrabajadoresScreen
+from textual.widgets import Footer, Button, DataTable, Label
+from textual.containers import Horizontal, Vertical
+from coleccionTienda import ColeccionTienda
+from pantallas import AñadirScreen, DeleteScreen, ContratarScreen, DespedirScreen, ConstruirScreen, DestruirScreen
 
-class AñadirScreen(Screen):
+
+class MainScreen(Screen):
     def compose(self) -> ComposeResult:
-        yield Input(placeholder="Nombre del producto", id="producto")
+        yield Label("PRODUCTOS DE LA TIENDA")
         yield Horizontal(
-            Button("Aceptar", id="boton_aceptar"),
-            Button("Cancelar", id="boton_cancelar")
-        )
-        yield Button("Volver", id="boton_volver")
-        yield Footer()
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        producto = self.query_one(Input).value
-        if event.button.id == "boton_aceptar" and producto:
-            self.app.coleccion.insertar(producto, "pro")
-            self.app.switch_to_main()
-        elif event.button.id == "boton_cancelar":
-            self.app.switch_to_main()
-
-class ContratarScreen(Screen):
-    def compose(self) -> ComposeResult:
-        yield Input(placeholder="Nombre del nuevo trabajador", id="trabajador")
-        yield Horizontal(
-            Button("Contratar", id="boton_aceptar"),
-            Button("Me arrepiento", id="boton_cancelar")
+            DataTable(classes="table1"),
+            Vertical(
+                Button("Añadir producto", id="boton_anadirP"),
+                Button("Eliminar producto", id="boton_eliminarP")
+            )
         )
         yield Footer()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        trabajador = self.query_one(Input).value
-        if event.button.id == "boton_aceptar" and trabajador:
-            self.app.coleccion.insertar(trabajador, "tra")
-            self.app.switch_to_trabajadores()
-        elif event.button.id == "boton_cancelar":
-            self.app.switch_to_trabajadores()
+        if event.button.id == "boton_anadirP":
+            self.app.switch_to_edit("p")
+        elif event.button.id == "boton_eliminarP":
+            self.app.switch_to_delete("p")
+
+    def on_mount(self) -> None:
+        self.actualizar_tabla()
+
+    def actualizar_tabla(self) -> None:
+        table = self.query_one(DataTable)
+        table.cursor_type = "none"
+        table.clear()
+
+        if not table.columns:
+            table.add_columns("ID", "Nombre del producto")
+
+        productos = self.app.coleccion.leer("pro")
+        for producto in productos:
+            table.add_rows([(str(producto[0]), producto[1])])
 
 
 
-class DespedirScreen(Screen):
+class TrabajadoresScreen(Screen):
     def compose(self) -> ComposeResult:
-        yield Input(placeholder="Nombre del trabajador", id="trabajador")
+        yield Label("TRABAJADORES DE LA TIENDA")
         yield Horizontal(
-            Button("Despedir", id="boton_aceptar"),
-            Button("Perdonar", id="boton_cancelar")
+            DataTable(classes="table2"),
+            Vertical(
+                Button("Contratar Trabajador", id="boton_anadirT"),
+                Button("Despedir Trabajador", id="boton_eliminarT")
+            )
         )
         yield Footer()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        trabajador = self.query_one(Input).value
-        if event.button.id == "boton_aceptar" and trabajador:
-            self.app.coleccion.borrar(trabajador, "tra")
-            self.app.switch_to_trabajadores()
-        elif event.button.id == "boton_cancelar":
-            self.app.switch_to_trabajadores()
+        if event.button.id == "boton_anadirT":
+            self.app.switch_to_edit("t")
+        elif event.button.id == "boton_eliminarT":
+            self.app.switch_to_delete("t")
+
+    def on_mount(self) -> None:
+        self.actualizar_tabla()
+
+    def actualizar_tabla(self) -> None:
+        table = self.query_one(DataTable)
+        table.cursor_type = "none"
+        table.clear()
+
+        if not table.columns:
+            table.add_columns("ID", "Nombre del Trabajador")
+
+        trabajadores = self.app.coleccion.leer("tra")
+        for trabajador in trabajadores:
+            table.add_rows([(str(trabajador[0]), trabajador[1])])
 
 
-class DeleteScreen(Screen):
+
+class TiendasScreen(Screen):
     def compose(self) -> ComposeResult:
-        yield Input(placeholder="Nombre del producto", id="producto")
+        yield Label("TODAS NUESTRAS TIENDAS")
         yield Horizontal(
-            Button("Aceptar", id="boton_aceptar"),
-            Button("Cancelar", id="boton_cancelar")
+            DataTable(classes="table3"),
+            Vertical(
+                Button("Construir tienda", id="boton_anadirTn"),
+                Button("Destruir tienda", id="boton_eliminarTn")
+            )
         )
-        yield Button("Volver", id="boton_volver")
         yield Footer()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        producto = self.query_one(Input).value
-        if event.button.id == "boton_aceptar" and producto:
-            self.app.coleccion.borrar(producto, "pro")
-            self.app.switch_to_main()
-        elif event.button.id == "boton_cancelar":
-            self.app.switch_to_main()
+        if event.button.id == "boton_anadirTn":
+            self.app.switch_to_edit("tnd")
+        elif event.button.id == "boton_eliminarTn":
+            self.app.switch_to_delete("tnd")
+
+    def on_mount(self) -> None:
+        self.actualizar_tabla()
+
+    def actualizar_tabla(self) -> None:
+        table = self.query_one(DataTable)
+        table.cursor_type = "none"
+        table.clear()
+
+        if not table.columns:
+            table.add_columns("ID", "Ubicaciones")
+
+        tiendas = self.app.coleccion.leer("tnd")
+        for tienda in tiendas:
+            table.add_rows([(str(tienda[0]), tienda[1])])
 
 
 class FooterApp(App):
     BINDINGS = [
         ("p", "switch_mode('main')", "Productos"),  
         ("t", "switch_mode('trabajadores')", "Trabajadores"),
+        ("i", "switch_mode('tiendas')", "Ver tiendas"),
         ("c", "quit", "Cerrar Programa"),
     ]
     MODES = {
         "main": MainScreen,  
         "trabajadores": TrabajadoresScreen,
-        
+        "tiendas": TiendasScreen,
     }
     def compose(self) -> ComposeResult:
         yield Footer()
@@ -100,7 +131,7 @@ class Pantallas(FooterApp):
 
     def __init__(self):
         super().__init__()
-        self.coleccion = ColeccionProductos()
+        self.coleccion = ColeccionTienda()
     
     def on_mount(self) -> None:
         self.switch_to_main()
@@ -108,21 +139,29 @@ class Pantallas(FooterApp):
     def switch_to_main(self) -> None:
         self.push_screen(MainScreen())
 
+    def switch_to_trabajadores(self) -> None:
+        self.push_screen(TrabajadoresScreen())
+
+    def switch_to_tiendas(self) -> None:
+        self.push_screen(TiendasScreen())
+
+
     def switch_to_edit(self, tipo) -> None:
         if tipo == "t":
             self.push_screen(ContratarScreen())
         elif tipo == "p":
             self.push_screen(AñadirScreen())
+        elif tipo == "tnd":
+            self.push_screen(ConstruirScreen())
 
     def switch_to_delete(self, tipo) -> None:
         if tipo == "t":
             self.push_screen(DespedirScreen())
         elif tipo == "p":
             self.push_screen(DeleteScreen())
+        elif tipo == "tnd":
+            self.push_screen(DestruirScreen())
         
-
-    def switch_to_trabajadores(self) -> None:
-        self.push_screen(TrabajadoresScreen())
 
 
 if __name__ == "__main__":

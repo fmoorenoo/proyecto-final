@@ -1,72 +1,114 @@
 from textual.app import ComposeResult
 from textual.screen import Screen
-from textual.widgets import Footer, Placeholder, Button, DataTable, Label
+from textual.widgets import Footer, Button, Input
 from textual.containers import Horizontal, Vertical
 
-
-class MainScreen(Screen):
+class AñadirScreen(Screen):
     def compose(self) -> ComposeResult:
-        yield Label("PRODUCTOS DE LA TIENDA")
+        yield Input(placeholder="Nombre del producto", id="producto")
         yield Horizontal(
-            DataTable(classes="table"),
-            Vertical(
-                Button("Añadir producto", id="boton_anadirP"),
-                Button("Eliminar producto", id="boton_eliminarP")
-            )
+            Button("Aceptar", id="boton_aceptar"),
+            Button("Cancelar", id="boton_cancelar")
         )
         yield Footer()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "boton_anadirP":
-            self.app.switch_to_edit("p")
-        elif event.button.id == "boton_eliminarP":
-            self.app.switch_to_delete("p")
+        producto = self.query_one(Input).value
+        if event.button.id == "boton_aceptar" and producto:
+            self.app.coleccion.insertar(producto, "pro")
+            self.app.switch_to_main()
+        elif event.button.id == "boton_cancelar":
+            self.app.switch_to_main()
 
-    def on_mount(self) -> None:
-        self.actualizar_tabla()
-
-    def actualizar_tabla(self) -> None:
-        table = self.query_one(DataTable)
-        table.cursor_type = "none"
-        table.clear()
-
-        if not table.columns:
-            table.add_columns("ID", "Nombre del producto")
-
-        productos = self.app.coleccion.leer("pro")
-        for producto in productos:
-            table.add_rows([(str(producto[0]), producto[1])])
-
-
-class TrabajadoresScreen(Screen):
+class ContratarScreen(Screen):
     def compose(self) -> ComposeResult:
-        yield Label("TRABAJADORES DE LA TIENDA")
+        yield Input(placeholder="Nombre del nuevo trabajador", id="trabajador")
         yield Horizontal(
-            DataTable(classes="table"),
-            Vertical(
-                Button("Contratar Trabajador", id="boton_anadirT"),
-                Button("Despedir Trabajador", id="boton_eliminarT")
-            )
+            Button("Contratar", id="boton_aceptar"),
+            Button("Me arrepiento", id="boton_cancelar")
         )
         yield Footer()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "boton_anadirT":
-            self.app.switch_to_edit("t")
-        elif event.button.id == "boton_eliminarT":
-            self.app.switch_to_delete("t")
+        trabajador = self.query_one(Input).value
+        if event.button.id == "boton_aceptar" and trabajador:
+            self.app.coleccion.insertar(trabajador, "tra")
+            self.app.switch_to_trabajadores()
+        elif event.button.id == "boton_cancelar":
+            self.app.switch_to_trabajadores()
 
-    def on_mount(self) -> None:
-        self.actualizar_tabla()
 
-    def actualizar_tabla(self) -> None:
-        table = self.query_one(DataTable)
-        table.cursor_type = "none"
-        table.clear()
 
-        if not table.columns:
-            table.add_columns("ID", "Nombre del Trabajador")
+class ConstruirScreen(Screen):
+    def compose(self) -> ComposeResult:
+        yield Input(placeholder="Ubicación de la nueva tienda", id="tienda")
+        yield Horizontal(
+            Button("Construir", id="boton_aceptar"),
+            Button("Nah, muchos gastos", id="boton_cancelar")
+        )
+        yield Footer()
 
-        trabajadores = self.app.coleccion.leer("tra")
-        for trabajador in trabajadores:
-            table.add_rows([(str(trabajador[0]), trabajador[1])])
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        ubi = self.query_one(Input).value
+        if event.button.id == "boton_aceptar" and ubi:
+            self.app.coleccion.insertar(ubi, "tnd")
+            self.app.switch_to_tiendas()
+        elif event.button.id == "boton_cancelar":
+            self.app.switch_to_tiendas()
+
+
+
+
+
+class DespedirScreen(Screen):
+    def compose(self) -> ComposeResult:
+        yield Input(placeholder="Nombre del trabajador", id="trabajador")
+        yield Horizontal(
+            Button("Despedir", id="boton_aceptar"),
+            Button("Perdonar", id="boton_cancelar")
+        )
+        yield Footer()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        trabajador = self.query_one(Input).value
+        if event.button.id == "boton_aceptar" and trabajador:
+            self.app.coleccion.borrar(trabajador, "tra")
+            self.app.switch_to_trabajadores()
+        elif event.button.id == "boton_cancelar":
+            self.app.switch_to_trabajadores()
+
+
+class DeleteScreen(Screen):
+    def compose(self) -> ComposeResult:
+        yield Input(placeholder="Nombre del producto", id="producto")
+        yield Horizontal(
+            Button("Aceptar", id="boton_aceptar"),
+            Button("Cancelar", id="boton_cancelar")
+        )
+        yield Footer()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        producto = self.query_one(Input).value
+        if event.button.id == "boton_aceptar" and producto:
+            self.app.coleccion.borrar(producto, "pro")
+            self.app.switch_to_main()
+        elif event.button.id == "boton_cancelar":
+            self.app.switch_to_main()
+
+
+class DestruirScreen(Screen):
+    def compose(self) -> ComposeResult:
+        yield Input(placeholder="Ubicación de la tienda que desea destruir", id="tienda")
+        yield Horizontal(
+            Button("Destruir", id="boton_aceptar"),
+            Button("Mejor no", id="boton_cancelar")
+        )
+        yield Footer()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        ubi = self.query_one(Input).value
+        if event.button.id == "boton_aceptar" and ubi:
+            self.app.coleccion.borrar(ubi, "tnd")
+            self.app.switch_to_tiendas()
+        elif event.button.id == "boton_cancelar":
+            self.app.switch_to_tiendas()
