@@ -3,9 +3,9 @@ from textual.screen import Screen
 from textual.widgets import Footer, Button, DataTable, Label
 from textual.containers import Horizontal, Vertical
 from coleccionTienda import ColeccionTienda
-from pantallas import AñadirScreen, DeleteScreen, ContratarScreen, DespedirScreen, ConstruirScreen, DestruirScreen
+from pantallas_edicion import AñadirScreen, DeleteScreen, ContratarScreen, DespedirScreen, ConstruirScreen, DestruirScreen
 
-
+# PANTALLA PRINCIPAL. PRODUCTOS DE LA TIENDA
 class MainScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Label("PRODUCTOS DE LA TIENDA")
@@ -40,7 +40,7 @@ class MainScreen(Screen):
             table.add_rows([(str(producto[0]), producto[1])])
 
 
-
+# PANTALLA DE TRABAJADORES
 class TrabajadoresScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Label("TRABAJADORES DE LA TIENDA")
@@ -75,7 +75,7 @@ class TrabajadoresScreen(Screen):
             table.add_rows([(str(trabajador[0]), trabajador[1])])
 
 
-
+# PANTALLA DE UBICACIÓN DE TIENDAS
 class TiendasScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Label("TODAS NUESTRAS TIENDAS")

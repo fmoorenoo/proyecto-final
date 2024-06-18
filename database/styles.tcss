@@ -1,11 +1,19 @@
 Screen {
     background: rgb(128, 128, 128);
 }
-    
-#boton_anadir, #boton_eliminar, #boton_aceptar, #boton_cancelar {
-    width: 20;
+Button {
+    width: 25;
     margin: 1;
+    align: center top;
 }
+#boton_anadir, #boton_aceptar {
+    background: green 50%;
+}
+
+#boton_eliminar, #boton_cancelar {
+    background: red 50%;
+}
+
 Label {
     padding: 1;
     text-style: bold;
