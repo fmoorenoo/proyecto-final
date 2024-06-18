@@ -6,6 +6,9 @@ Button {
     margin: 1;
     align: center top;
 }
+
+
+
 #boton_anadir, #boton_aceptar {
     background: green 50%;
 }
@@ -18,6 +21,10 @@ Label {
     padding: 1;
     text-style: bold;
 }
+Button:hover, #boton_anadir:hover, #boton_aceptar:hover, #boton_eliminar:hover, #boton_cancelar:hover {
+    background: blue 50%;
+}
+
 DataTable{
     width: 40;
     background: blue 20%;
